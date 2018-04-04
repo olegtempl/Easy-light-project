@@ -1,0 +1,154 @@
+/* 
+                                header
+*/
+/* 
+бордер по координатам
+
+
+*/
+
+
+// .icon {
+//         display: inline-block;
+//       }
+      
+main {
+min-height: calc(100vh - 320px);
+
+}
+.header-wrap {
+        min-height: 110px;
+        width: 100%; 
+        max-height: 250px; 
+        //rgba(255, 255, 255, 0.05)
+        background:linear-gradient(to bottom, rgba(0%, 0%, 0%, 0.6), transparent 100%); 
+
+        .logo-text {
+        position: absolute;
+        left: 151.576px;
+        top: 48.498px;
+        width: 165.461px;
+        height: 31.875px;
+        }
+
+        // .logo-text-white {
+        //         font-size: 46px;
+        //         font-family: "YesevaOne";
+        //         color: rgba(255, 255, 255, 0.7);
+        //         line-height: 1.2;
+        //         text-align: center;
+        
+        //         position: absolute;
+        //         left: 151.576px;
+        //         top: 38.498px;
+        //         width: 165.461px;
+        //         height: 31.875px;
+        
+        
+        //         }
+        
+        nav {
+                width: 910px;
+                height: 100%;
+
+                display: flex;
+                align-items: center;
+                justify-content: center; 
+
+                ul {        
+                        max-width: 770px;
+
+                        height: 100%;
+
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-around; 
+                        flex-wrap: nowrap;    
+
+                        list-style-type: none;
+                        float: right;
+
+                        font-weight: bold;
+                        line-height: 1.2;
+                        text-align: justifyAll;
+                        position: absolute;
+                        left: 571.913px;
+                        top: 48.361px;
+
+                }
+                
+                 li {
+                         padding-right: 60px;
+                         font-size: 21px;
+                         font-family: "GentiumBookBasic";
+
+                        height: 100%;
+                        // width: 68px;
+                        a{
+                                color: #ffffff;
+
+                        }
+                }
+                // li:nth-child(1){
+                        
+                //                 border-top-width: 6px;
+                //                 border-color: rgb(255, 255, 255);
+                //                 border-style: solid;
+                //                 opacity: 0.71;
+                                
+                // }
+                // li:nth-child(1):hover {
+                //          border: none;
+                // }
+                li:hover{
+                        border-top-width: 6px;
+                        border-color: rgb(255, 255, 255);
+                        border-style: solid;
+                        opacity: 0.71;
+                       
+                }
+                        // height: 100%;
+
+                //         // li:nth-child(1){ 
+                //         //         border: none;
+                //         // }
+
+                // }
+                //  li:nth-child(1){
+                //         border-top-width: 6px;
+                //         border-color: rgb(255, 255, 255);
+                //         border-style: solid;
+                //         opacity: 0.71;
+                //         height: 100%;
+
+
+                //         // width: 68px;
+                //         // height: 0;
+                // }
+                 a {
+                        display: block;
+                        padding: 8px;
+                }
+        }
+        .social {
+
+                max-width: 120px;
+
+                display: flex;
+                align-items: center;
+                justify-content: space-around; 
+                flex-wrap: nowrap;
+                position: absolute;
+                left: 1433.913px;
+                top: 59.361px;
+                width: 81px;
+                height: 21px;
+                a {
+                        margin-right: 17px;
+                        
+                }
+        }
+        
+        
+}
+
