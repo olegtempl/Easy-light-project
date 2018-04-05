@@ -91,24 +91,9 @@ const path = {
  * iife - browser
  *  */
 //------------------------------Babel
-// const babelConfig = require(path.configs.babel);
+const babelConfig = require(path.configs.babel);
 //------------------------------JsDoc
 const jsDocConfig = require(path.configs.jsDoc);
-//------------------------------Babel
-const babelConfig = {
-	"presets": [
-	  [
-		"es2015",
-		{
-		  "modules": false
-		}
-	  ]
-	],
-	"plugins": [
-	  "external-helpers"
-	],
-	babelrc: false
-};
 //------------------------------Bundler (RoolUp)
 //------------------------------Config rollup
 const nameMainSrcfile = 'index.js',
@@ -346,24 +331,3 @@ gulp.task('build', ['fontsBuild', 'htmlBuild', 'jsBuild', 'cssBuild'] ); //,
 gulp.task('validation', ['validationHtml', 'lintJs']); 
 // добавить тесты,документацию
 
-
-
-/*
-    В моем проекте стоит стандарт airbnb,под свои проект можно сконфигурировать файл заново 
-    командой:
-    ./node_modules/.bin/eslint --init
-
-*/
-/* В документацию
-"rollup-plugin-commonjs": "^8.4.1", <= this version is worked
-в файлах спецификаций test/jasmine/spec.js test/mocha/spec.js/есть пути к тестируемым файлах, они подключаются как модули
-*/
-/*
- *			Доделать
- *		Продакшэн обработку доделать
- *		Добавить спрайты + scss миксины
- * 		Протестить uncss ( проблемы на продакшене)
- *		Добавить запуск серверов по флагам  
- * 		/*
-	добавить генерацию своей системы через шел\ноду
-*/
