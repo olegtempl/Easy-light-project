@@ -29,10 +29,15 @@ const 	purify = require('gulp-purifycss'),
 		uncss = require('gulp-uncss'),
 		cssmin = require('gulp-minify-css'),
 		csso = require('gulp-csso');
-//plugins for validation
-const 	html5Lint = require('gulp-html5-lint');
-//plugins for testing
-
+// plugins for tests
+const   mocha = require('gulp-mocha'),
+    	jasmine = require('gulp-jasmine');
+// plugins for validations
+const   eslint = require('gulp-eslint'),
+	 	html5Lint = require('gulp-html5-lint');
+// plugins for documentation
+const 	jsdoc = require('gulp-jsdoc3');
+// paths on project
 const path = {
     src: { 
         pug: 	'src/pug/**/*.pug', 	
@@ -62,14 +67,50 @@ const path = {
 	    scss:	'src/styles/**/*.scss',
 	    images: 'src/images/**/*',
 		fonts: 	'src/fonts/**/*',
-		// for plugin uncss
+    },
+  	tests : {
+  		mocha : 'tests/mocha/spec.js',
+      	jasmine : 'tests/jasmine/spec.js'
+  	},
+  	validation : {
+  		html : 'build/*.html',
+  		css : 'build/styles/index.css',
+  		js : 'src/js/**/*.js',
+      	jsFixedLinterOutput: 'src/js/'
+  	},
+    configs : {
+      	jsDoc : './configs/jsDoc.json',
+      	babel : './configs/babel.json'
+    },
+        docs: {
+        jsDoc: 'docs/jsDoc/README.md'
     }
 }; 
 //-----------------------------------------------------Js 
-//------------------------------Bundler (RoolUp)
 /* cjs - nodejs
  * iife - browser
  *  */
+//------------------------------Babel
+// const babelConfig = require(path.configs.babel);
+//------------------------------JsDoc
+const jsDocconfig = require(path.configs.jsDoc);
+//------------------------------Babel
+const babelConfig = {
+	"presets": [
+	  [
+		"es2015",
+		{
+		  "modules": false
+		}
+	  ]
+	],
+	"plugins": [
+	  "external-helpers"
+	],
+	babelrc: false
+};
+//------------------------------Bundler (RoolUp)
+//------------------------------Config rollup
 const nameMainSrcfile = 'index.js',
 	  typeModules = 'cjs',
 	  sourceMap = true;
@@ -85,80 +126,23 @@ const rollupJS = (inputFile, options) => {
 			commonJs(),
 			]
 		})
-		// point to the entry file.
 		.pipe(source(inputFile, options.basePath))
-		// we need to buffer the output, since many gulp plugins don't support streams.
 		.pipe(buffer())
 		.pipe(sourcemaps.init({loadMaps: true}))
-		// some transformations like uglify, rename, etc.
 		.pipe(sourcemaps.write('.'))
 		.pipe(gulp.dest(options.distPath));
 	};
 };
-//------------------------------Babel
-const babelConfig = {
-	"presets": [
-	  [
-		"es2015",
-		{
-		  "modules": false
-		}
-	  ]
-	],
-	"plugins": [
-	  "external-helpers"
-	],
-	babelrc: false
-  };
-  
-
-/*
- *			Доделать
- *		Обработку ошибок\уведомлений
- *		Продакшэн обработку
- *		Вынести в отдельную папку
- * 		Запуск валидации по AirnD
- *		Запуск тестов по mocha,jasmine ( на gulp или  бандлер парсель ?) 
- *		Добавить спрайты + scss миксины
- * 		Протестить uncss ( проблемы на продакшене)
- * 		Добавить коментарии JsDoc
- * 
- * 
- */
-
-/* В документацию
-"rollup-plugin-commonjs": "^8.4.1", <= this version is worked
-
-// livepreload server directory `build`
-// gulp.task('browser-sync') 
-// create the tunnel for you site,directory `prodaction`
-// gulp.task('server') 
-
-// validation and linters the files
-// gulp.task('validation')
-// run tests on jasmine \ mocha
-// gulp.task('test')
-
-
-// run in development       
-// gulp.task('default')
-//	prodaction
-// gulp.task('build')
-
-
- *
- *  */
 //-----------------------------------------------------Errors
+//------------------------------Messages
 const 	messageBuildHtml = 'Build prodaction version html',
 		messageBuildCss = 'Build prodaction version css',
 		messageBuildJs = 'Build prodaction version js',
 		messageBuildImage = 'Build prodaction image',
 		messageBuildFonts = 'Build fonts on prodaction',
-		// messageLivepreload = 'Server livepreload activaited',	   // no work	
-		// messageServerTunnel = 'Tunnel for you project activaited',  // no work
 		messageValidation = 'Validation started',
 		messageTesting = 'Start the tests';
-
+//------------------------------Error handler
 const onError = function (err) {
   notify.onError({
     title: 'Gulp',
@@ -167,10 +151,8 @@ const onError = function (err) {
   })(err);
   this.emit('end');
 };
-
 //-----------------------------------------------------Compilers
-
-// html+pug
+// pug > html
 gulp.task('pug', function () {		
 	gulp.src(path.src.pug)		 
 		.pipe(plumber({errorHandler: onError}))      
@@ -178,8 +160,7 @@ gulp.task('pug', function () {
 		.pipe(gulp.dest(path.build.html))			  // output html
         .pipe(reload({stream: true}));               
 });
-
-//сss+scss(sass)
+// scss > сss
 gulp.task('sass', function () {
 	gulp.src(path.src.scss)
 		.pipe(sass())						
@@ -189,8 +170,7 @@ gulp.task('sass', function () {
 		.pipe(gulp.dest(path.build.css))	// output css
         .pipe(reload({stream: true}));      
 });
-
-//js
+//js(es6) > js(es3)
 gulp.task('js', rollupJS(nameMainSrcfile, {
 	basePath: path.src.js,
 	format: typeModules,				
@@ -206,12 +186,6 @@ gulp.task('watch', function () {
 	gulp.watch(path.watch.fonts + '**/*',  ['fontsSync']);
 });
 //-------------------------------------------------Servers
-
-/* 
- * 	Сделать запуск по флагам ?
- * 
- *  */
-
 //------------------------------Livepreload
 const configServerLive = {
 	port: 8081,
@@ -219,9 +193,7 @@ const configServerLive = {
 		baseDir: path.build.html
 	}
 }
-
 gulp.task('server', function () {  
-	// .pipe(notify({ message: messageServerTunnel, onLast: true  }))
     browserSync(configServerLocal);
 });
 //------------------------------Local Server
@@ -234,12 +206,9 @@ const configServerLocal = {
     port: 8081, // 9000
     logPrefix: 'Frontend_medved'
 };
-
 gulp.task('browser-sync', function () {
-	// .pipe(notify({ message: messageLivepreload, onLast: true  }))
 	browserSync(configServerLive);
 });
-
 //-------------------------------------------------Synchronization
 //Таски для синхронизации папок проекта между собой:
 gulp.task('imageSync', function () {
@@ -326,27 +295,74 @@ gulp.task('cssBuild', function () {
 });
 
 //------------------------------------------------Validation
-//testing your build files
-// validation task
-gulp.task('validation', function () {
-	// добавить airNb для css, js, html - сохранить
+//------------------------------Html
+gulp.task('validationHtml', function () {
 	return gulp.src(buildDir + '**/*.html')
 		.pipe(notify({ message: messageValidation, onLast: true  }))
 		.pipe(html5Lint());
 });
+//------------------------------Js
+gulp.task('lintJs', () => {
+  return gulp.src([path.validation.js,'!node_modules/**'])
+    .pipe(eslint({
+      fix: true       // редактирует ошибки если может
+    }))
+    .pipe(eslint.format())
+    gulp.dest(jsFixedLinterOutput)
+    .pipe(eslint.results(results => {
+        console.log(`Total Results: ${results.length}`);
+        console.log(`Total Warnings: ${results.warningCount}`);
+        console.log(`Total Errors: ${results.errorCount}`);
+    }))
+});
 //------------------------------------------------Testing
-// run tests on jasmine \ mocha
-// gulp.task('test', function () { 
+//------------------------------Mocha
+gulp.task('test:mocha', () =>
+    gulp.src(path.tests.mocha) //
+    	.pipe(notify({ message: messageTesting, onLast: true  }))
+        .pipe(mocha())
+);
+//------------------------------Jasmine
+gulp.task('test:jasmine', () =>
+    gulp.src(path.tests.jasmine)
+       	.pipe(notify({ message: messageTesting, onLast: true  }))
+        .pipe(jasmine())
+);
+//------------------------------------------------Documentation
+//------------------------------JsDoc
+gulp.task('jsDoc', function (cb) {
+    gulp.src([path.docs.jsDoc, `${path.build.js}index.js`], {read: false})
+    .pipe(jsdoc(jsDocconfig, cb));
+});  
+/******************************************************************
 
-// 	.pipe(notify({ message: messageTesting, onLast: true  }))
+							TASKS
 
-// })
-
+*******************************************************************/
 // for development
 gulp.task('default', ['pug', 'sass', 'js', 'imageSync', 'fontsSync', 'watch', 'browser-sync']); 
 // for production
 gulp.task('build', ['fontsBuild', 'htmlBuild', 'jsBuild', 'cssBuild'] ); //, 
+gulp.task('validation', ['validationHtml', 'lintJs']); 
+// добавить тесты,документацию
 
-// gulp.task('build', ['cleanBuildDir'], function () {
-// 	gulp.start('imgBuild', 'fontsBuild', 'htmlBuild', 'jsBuild', 'cssBuild');
-// });
+
+
+/*
+    В моем проекте стоит стандарт airbnb,под свои проект можно сконфигурировать файл заново 
+    командой:
+    ./node_modules/.bin/eslint --init
+
+*/
+/* В документацию
+"rollup-plugin-commonjs": "^8.4.1", <= this version is worked
+*/
+/*
+ *			Доделать
+ *		Продакшэн обработку доделать
+ *		Добавить спрайты + scss миксины
+ * 		Протестить uncss ( проблемы на продакшене)
+ *		Добавить запуск серверов по флагам  
+ * 		/*
+	добавить генерацию своей системы через шел\ноду
+*/
