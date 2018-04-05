@@ -83,7 +83,7 @@ const path = {
       	babel : './configs/babel.json'
     },
         docs: {
-        jsDoc: 'docs/jsDoc/README.md'
+	        jsDoc: 'docs/jsDoc/README.md'
     }
 }; 
 //-----------------------------------------------------Js 
@@ -93,7 +93,7 @@ const path = {
 //------------------------------Babel
 // const babelConfig = require(path.configs.babel);
 //------------------------------JsDoc
-const jsDocconfig = require(path.configs.jsDoc);
+const jsDocConfig = require(path.configs.jsDoc);
 //------------------------------Babel
 const babelConfig = {
 	"presets": [
@@ -332,7 +332,7 @@ gulp.task('test:jasmine', () =>
 //------------------------------JsDoc
 gulp.task('jsDoc', function (cb) {
     gulp.src([path.docs.jsDoc, `${path.build.js}index.js`], {read: false})
-    .pipe(jsdoc(jsDocconfig, cb));
+    .pipe(jsdoc(jsDocConfig, cb));
 });  
 /******************************************************************
 
@@ -356,6 +356,7 @@ gulp.task('validation', ['validationHtml', 'lintJs']);
 */
 /* В документацию
 "rollup-plugin-commonjs": "^8.4.1", <= this version is worked
+в файлах спецификаций test/jasmine/spec.js test/mocha/spec.js/есть пути к тестируемым файлах, они подключаются как модули
 */
 /*
  *			Доделать
