@@ -80,7 +80,9 @@ const path = {
   	},
     configs : {
       	jsDoc : './configs/jsDoc.json',
-      	babel : './configs/babel.json'
+      	babel : './configs/babel.json',
+      	serverLive : './configs/serverLivereload.json',
+      	serverTunnel : './configs/serverTunnel.json'
     },
         docs: {
 	        jsDoc: 'docs/jsDoc/README.md'
@@ -94,6 +96,10 @@ const path = {
 const babelConfig = require(path.configs.babel);
 //------------------------------JsDoc
 const jsDocConfig = require(path.configs.jsDoc);
+//------------------------------Livereload
+const configServerLivereload = require(path.configs.serverLive);
+//------------------------------Tunnel
+const configServerTunnel= require(path.configs.serverTunnel);
 //------------------------------Bundler (RoolUp)
 //------------------------------Config rollup
 const nameMainSrcfile = 'index.js',
@@ -136,6 +142,45 @@ const onError = function (err) {
   })(err);
   this.emit('end');
 };
+//-------------------------------------------------Servers
+//------------------------------Livepreload
+gulp.task('server', function () {  
+    browserSync(configServerTunnel);
+});
+//------------------------------Local Server
+gulp.task('browser-sync', function () {
+	browserSync(configServerLivereload);
+});
+//-------------------------------------------------Watchers
+gulp.task('watch', function () {
+	gulp.watch(path.watch.pug, ['pug']);
+	gulp.watch(path.watch.scss, ['sass']);
+	gulp.watch(path.watch.js, ['js']);
+	gulp.watch(path.watch.images + '**/*', ['imageSync']);
+	gulp.watch(path.watch.fonts + '**/*',  ['fontsSync']);
+});
+//-------------------------------------------------Synchronization
+//Таски для синхронизации папок проекта между собой:
+gulp.task('imageSync', function () {
+	return gulp.src('')
+		.pipe(plumber())
+		.pipe(dirSync(path.src.images, path.build.images, {printSummary: true}))
+		.pipe(browserSync.stream());
+});
+
+gulp.task('fontsSync', function () {
+	return gulp.src('')
+		.pipe(plumber())
+		.pipe(dirSync(path.src.fonts, path.build.fonts, {printSummary: true}))
+		.pipe(browserSync.stream());
+});
+
+// gulp.task('jsSync', function () {
+// 	return gulp.src(build.js + '/**/*.js')
+// 		.pipe(plumber())
+// 		.pipe(gulp.dest(outputDir + 'js/'))
+// 		.pipe(browserSync.stream());
+// });
 //-----------------------------------------------------Compilers
 // pug > html
 gulp.task('pug', function () {		
@@ -162,60 +207,6 @@ gulp.task('js', rollupJS(nameMainSrcfile, {
 	distPath: path.build.js,
 	sourcemap: sourceMap
   }));
-//-------------------------------------------------Watchers
-gulp.task('watch', function () {
-	gulp.watch(path.watch.pug, ['pug']);
-	gulp.watch(path.watch.scss, ['sass']);
-	gulp.watch(path.watch.js, ['js']);
-	gulp.watch(path.watch.images + '**/*', ['imageSync']);
-	gulp.watch(path.watch.fonts + '**/*',  ['fontsSync']);
-});
-//-------------------------------------------------Servers
-//------------------------------Livepreload
-const configServerLive = {
-	port: 8081,
-	server: {
-		baseDir: path.build.html
-	}
-}
-gulp.task('server', function () {  
-    browserSync(configServerLocal);
-});
-//------------------------------Local Server
-const configServerLocal = {
-    server: {
-        baseDir: path.prodaction.html
-    },
-    tunnel: true,
-    host: 'localhost',
-    port: 8081, // 9000
-    logPrefix: 'Frontend_medved'
-};
-gulp.task('browser-sync', function () {
-	browserSync(configServerLive);
-});
-//-------------------------------------------------Synchronization
-//Таски для синхронизации папок проекта между собой:
-gulp.task('imageSync', function () {
-	return gulp.src('')
-		.pipe(plumber())
-		.pipe(dirSync(path.src.images, path.build.images, {printSummary: true}))
-		.pipe(browserSync.stream());
-});
-
-gulp.task('fontsSync', function () {
-	return gulp.src('')
-		.pipe(plumber())
-		.pipe(dirSync(path.src.fonts, path.build.fonts, {printSummary: true}))
-		.pipe(browserSync.stream());
-});
-
-// gulp.task('jsSync', function () {
-// 	return gulp.src(build.js + '/**/*.js')
-// 		.pipe(plumber())
-// 		.pipe(gulp.dest(outputDir + 'js/'))
-// 		.pipe(browserSync.stream());
-// });
 //------------------------------------------------Building prodaction 
 //------------------------------clean folder `build`
 // gulp.task('cleanBuildDir', function (cb) {
