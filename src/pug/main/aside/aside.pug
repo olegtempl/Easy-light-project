@@ -7,15 +7,16 @@ html(lang="ru")
         link(rel='stylesheet', type='text/css', href='styles/index.css')
         title Lambda restaraunt
     body
-        header
-        	include header/header.pug
+        //- header
+        include main/block_promo.pug
         //- main
         main
-           	include main/block_promo.pug
+        
             include main/block_1.pug
-
-            aside
-            	aside.pug 
+            include main/block_2.pug
+            include main/block_3.pug
+            include main/block_4.pug
+            include main/block_5.pug
         
         //- footer
         footer
