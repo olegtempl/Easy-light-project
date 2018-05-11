@@ -1,5 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
+const path = require('./path.json');
 
 export default {
   input: 'src/js/index.js',

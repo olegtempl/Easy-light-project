@@ -9,7 +9,7 @@
     "server": "gulp server",
     "validation": "gulp validation",
     "test": "gulp test",
-    "js": "rollup -c -w -m"
+    "js": "rollup -c configs/rollup.config.js -w -m"
   },
   "author": "",
   "license": "ISC",
