@@ -30,8 +30,15 @@ const 	purify = require('gulp-purifycss'),
 		cssmin = require('gulp-minify-css'),
 		csso = require('gulp-csso');
 // plugins for tests
-const   mocha = require('gulp-mocha'),
-    	jasmine = require('gulp-jasmine');
+const   mocha = require('gulp-mocha');
+// jasmine test
+const Jasmine = require('jasmine'),
+      jasmine = new Jasmine(),
+      jasmineConfig = require('./configs/jasmine/jasmine.json');
+// jasmine reporter
+const JasmineConsoleReporter = require('jasmine-console-reporter'),
+      jasmineReporterConfig = require('./configs/jasmine/jasmineReporter.json'),
+      reporter = new JasmineConsoleReporter(jasmineReporterConfig);
 // plugins for validations
 const   eslint = require('gulp-eslint'),
 	 	html5Lint = require('gulp-html5-lint');
@@ -249,11 +256,13 @@ gulp.task('test:mocha', () =>
         .pipe(mocha())
 );
 //------------------------------Jasmine
-gulp.task('test:jasmine', () =>
-    gulp.src(path.tests.jasmine)
-       	.pipe(notify({ message: messageTesting, onLast: true  }))
-        .pipe(jasmine())
-);
+gulp.task('test:jasmine', () => {
+  jasmine.loadConfig(jasmineConfig);
+  jasmine.jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
+  jasmine.env.clearReporters();
+  jasmine.addReporter(reporter);
+  jasmine.execute();
+});
 //------------------------------------------------Documentation
 //------------------------------JsDoc
 gulp.task('jsDoc', function (cb) {
