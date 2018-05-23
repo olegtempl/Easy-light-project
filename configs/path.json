@@ -29,7 +29,7 @@
       "fonts": "src/fonts/**/*"
    },
    "tests": {
-      "mocha": "tests/mocha/spec.js"
+      "mocha": "test/mocha/spec.js"
    },
    "validation": {
       "html": "build/*.html",
