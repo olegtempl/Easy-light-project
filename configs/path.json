@@ -44,7 +44,9 @@
       "serverTunnel": "./configs/serverTunnel.json"
    },
    "docs": {
-      "jsDoc": "docs/jsDoc/README.md"
+      "jsDoc": "docs/jsDoc/README.md",
+      "scrennshotesWebSite": "prodaction/SCREENSHOTS/",
+      "scrennshotesProjectElp": "docs/images/screenshots"
    }
 }
 
