@@ -30,8 +30,9 @@
    },
    "tests": {
       "mocha": "test/mocha/spec.js",
-      "gui": "test/gui/spec.js",
-      "screenshots": "test/gui/spec.js"
+      "jasmine": "test/jasmine/spec.js",
+      "gui": "test/gui/spec_userstory.js",
+      "screenshots": "test/gui/spec_screenshots.js"
    },
    "validation": {
       "html": "build/*.html",
@@ -61,7 +62,8 @@
     "mainPage":"prodaction/SCREENSHOTS/main_page",
     "aboutPage":"prodaction/SCREENSHOTS/about_page",
     "contactsPage":"prodaction/SCREENSHOTS/contacts_page"
-   }
+   },
+   "messages": "./configs/messages.json"
 
 }
 
