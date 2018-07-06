@@ -43,8 +43,17 @@
       "serverLive": "./configs/serverLivereload.json",
       "serverTunnel": "./configs/serverTunnel.json"
    },
+   "commands": {
+    "serverSelenium": "./configs/shell_commands/serverSelenium.js",
+    "runCmd": "./configs/shell_commands/runCmd.js",
+    "": "./configs/shell_commands",
+    "": "./configs/shell_commands",
+    "": "./configs/shell_commands"
+   },
    "docs": {
-      "jsDoc": "docs/jsDoc/README.md"
+      "jsDoc": "docs/jsDoc/README.md",
+      "scrennshotesWebSite": "prodaction/SCREENSHOTS/",
+      "scrennshotesProjectElp": "docs/images/screenshots"
    }
 }
 

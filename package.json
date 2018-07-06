@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "version": "1.0.0",
+  "name": "ELP",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "test:e": "gulp test:e2e",
     "js": "rollup -c configs/rollup.config.js -w -m"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "Oleg Medvedev",
+  "license": "CC BY-NC-SA 4.0",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
@@ -50,6 +50,7 @@
     "gulp-jsdoc3": "^2.0.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-mocha": "^5.0.0",
+    "gulp-notify": "^3.2.0",
     "gulp-pandoc-pdf": "^0.1.3",
     "gulp-plumber": "^1.2.0",
     "gulp-pug": "^3.3.0",
@@ -62,6 +63,8 @@
     "imagemin-pngquant": "^5.1.0",
     "jasmine-console-reporter": "^3.0.2",
     "mocha": "^5.0.1",
+    "node-cl-log": "^1.0.2",
+    "pageres": "^4.5.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.4.1",
     "rollup-plugin-node-resolve": "^3.2.0",
@@ -72,7 +75,6 @@
     "webdriverio": "^4.12.0"
   },
   "dependencies": {
-    "dev": "^0.1.3",
-    "gulp-notify": "^3.2.0"
+    "dev": "^0.1.3"
   }
 }
