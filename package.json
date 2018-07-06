@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "version": "1.0.0",
+  "name": "ELP",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,8 +21,8 @@
     "test:e": "gulp test:e2e",
     "js": "rollup -c configs/rollup.config.js -w -m"
   },
-  "author": "",
-  "license": "MIT",
+  "author": "Oleg Medvedev",
+  "license": "CC BY-NC-SA 4.0",
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
