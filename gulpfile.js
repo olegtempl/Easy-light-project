@@ -53,10 +53,24 @@ const path = require('./configs/path.json');
 const babelConfig = require(path.configs.babel);
 //------------------------------JsDoc
 const jsDocConfig = require(path.configs.jsDoc);
+//-----------------------------------------------------Servers
 //------------------------------Livereload
 const configServerLivereload = require(path.configs.serverLive);
 //------------------------------Tunnel
-const configServerTunnel= require(path.configs.serverTunnel);
+const configServerTunnel = require(path.configs.serverTunnel);
+//------------------------------Selenium
+const commandServerSelenium = require(path.commands.serverSelenium);
+//-----------------------------------------------------Shell commands
+//------------------------------Start shell commands
+const runCmd = require(path.commands.runCmd);
+//------------------------------
+// const = require(path.shellCommands.);
+//------------------------------
+// const = require(path.shellCommands.);
+//------------------------------
+// const = require(path.shellCommands.);
+
+
 //------------------------------Bundler (RoolUp)
 //------------------------------Config rollup
 const nameMainSrcfile = 'index.js',
@@ -107,6 +121,10 @@ gulp.task('server', function () {
 //------------------------------Local Server
 gulp.task('browser-sync', function () {
 	browserSync(configServerLivereload);
+});
+//------------------------------Selenium Server
+gulp.task('selenium', function () {
+	runCmd(commandServerSelenium);
 });
 //-------------------------------------------------Watchers
 gulp.task('watch', function () {
