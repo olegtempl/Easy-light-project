@@ -9,9 +9,9 @@ const path = require("../../configs/path.json")
  */
 
 const guiTestsCommand = [
-  'xfce4-terminal --tab',
-  'java -jar -Dwebdriver.gecko.driver=./configs/geckodriver/geckodriver ./configs/geckodriver/selenium_server.jar &',
-  `node ${path.tests.gui}`
+  // 'xfce4-terminal --tab',
+  // 'java -jar -Dwebdriver.gecko.driver=./configs/geckodriver/geckodriver ./configs/geckodriver/selenium_server.jar &',
+  `node ${path.tests.screenshots}`
 ];
 
 module.exports = guiTestsCommand;

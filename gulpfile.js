@@ -36,23 +36,20 @@ const Jasmine = require('jasmine'),
       jasmine = new Jasmine(),
       jasmineConfig = require('./configs/jasmine/jasmine.json');
 // jasmine reporter
-const JasmineConsoleReporter = require('jasmine-console-reporter'),
+const JasmineclReporter = require('jasmine-console-reporter'),
       jasmineReporterConfig = require('./configs/jasmine/jasmineReporter.json'),
-      reporter = new JasmineConsoleReporter(jasmineReporterConfig);
+      reporter = new JasmineclReporter(jasmineReporterConfig);
 // plugins for validations
-const   eslint = require('gulp-eslint'),
-	 	html5Lint = require('gulp-html5-lint');
+const eslint = require('gulp-eslint'),
+	 	  html5Lint = require('gulp-html5-lint');
 // plugins for documentation
-const 	jsdoc = require('gulp-jsdoc3');
-//-----------------------------------------------------Js
-/* cjs - nodejs
- * iife - browser
- *  */
-const path = require('./configs/path.json');
-//------------------------------Babel
-const babelConfig = require(path.configs.babel);
-//------------------------------JsDoc
-const jsDocConfig = require(path.configs.jsDoc);
+const jsdoc = require('gulp-jsdoc3');
+// others
+const cl = require('node-cl-log');
+
+//------------------------------Messages for tasks
+const message = require(path.messages);
+//------------------------------All paths on project
 //-----------------------------------------------------Servers
 //------------------------------Livereload
 const configServerLivereload = require(path.configs.serverLive);
@@ -65,12 +62,57 @@ const commandServerSelenium = require(path.commands.serverSelenium);
 const runCmd = require(path.commands.runCmd);
 //------------------------------Start the gui tests
 const commandGuiTests = require(path.commands.guiTests);
-//------------------------------
+//------------------------------Start the make scrennshotes
 const commandCreateScreenshots = require(path.commands.guiSreenshots);
 //------------------------------
 // const = require(path.commands.);
+//-------------------------------------------------Servers
+//------------------------------Livepreload
+gulp.task('server', function () {
+    browserSync(configServerTunnel);
+});
+//------------------------------Local Server
+gulp.task('browser-sync', function () {
+	browserSync(configServerLivereload);
+});
+//------------------------------Selenium Server
+gulp.task('selenium', function () {
+  gulp.src('')
+  .pipe(notify({ message: message.servers.selenium , onLast: true  }))
+  runCmd(commandServerSelenium);
+});
+//-------------------------------------------------Watchers
+gulp.task('watch', function () {
+	gulp.watch(path.watch.pug, ['pug']);
+	gulp.watch(path.watch.scss, ['sass']);
+	gulp.watch(path.watch.js, ['js']);
+	gulp.watch(path.watch.images + '**/*', ['imageSync']);
+	gulp.watch(path.watch.fonts + '**/*',  ['fontsSync']);
+});
+//-------------------------------------------------Synchronization
+// Task for synchronizing project folders with each other:
+gulp.task('imageSync', function () {
+	return gulp.src('')
+		.pipe(plumber())
+		.pipe(dirSync(path.src.images, path.build.images, {printSummary: true}))
+		.pipe(browserSync.stream());
+});
 
-
+gulp.task('fontsSync', function () {
+	return gulp.src('')
+		.pipe(plumber())
+		.pipe(dirSync(path.src.fonts, path.build.fonts, {printSummary: true}))
+		.pipe(browserSync.stream());
+});
+//-----------------------------------------------------Js
+/* cjs - nodejs
+ * iife - browser
+ *  */
+const path = require('./configs/path.json');
+//------------------------------Babel
+const babelConfig = require(path.configs.babel);
+//------------------------------JsDoc
+const jsDocConfig = require(path.configs.jsDoc);
 //------------------------------Bundler (RoolUp)
 //------------------------------Config rollup
 const nameMainSrcfile = 'index.js',
@@ -96,14 +138,6 @@ const rollupJS = (inputFile, options) => {
 	};
 };
 //-----------------------------------------------------Errors
-//------------------------------Messages
-const 	messageBuildHtml = 'Build prodaction version html',
-		messageBuildCss = 'Build prodaction version css',
-		messageBuildJs = 'Build prodaction version js',
-		messageBuildImage = 'Build prodaction image',
-		messageBuildFonts = 'Build fonts on prodaction',
-		messageValidation = 'Validation started',
-		messageTesting = 'Start the tests';
 //------------------------------Error handler
 const onError = function (err) {
   notify.onError({
@@ -113,57 +147,14 @@ const onError = function (err) {
   })(err);
   this.emit('end');
 };
-//-------------------------------------------------Servers
-//------------------------------Livepreload
-gulp.task('server', function () {
-    browserSync(configServerTunnel);
-});
-//------------------------------Local Server
-gulp.task('browser-sync', function () {
-	browserSync(configServerLivereload);
-});
-//------------------------------Selenium Server
-gulp.task('selenium', function () {
-	runCmd(commandServerSelenium);
-});
-//-------------------------------------------------Watchers
-gulp.task('watch', function () {
-	gulp.watch(path.watch.pug, ['pug']);
-	gulp.watch(path.watch.scss, ['sass']);
-	gulp.watch(path.watch.js, ['js']);
-	gulp.watch(path.watch.images + '**/*', ['imageSync']);
-	gulp.watch(path.watch.fonts + '**/*',  ['fontsSync']);
-});
-//-------------------------------------------------Synchronization
-//Таски для синхронизации папок проекта между собой:
-gulp.task('imageSync', function () {
-	return gulp.src('')
-		.pipe(plumber())
-		.pipe(dirSync(path.src.images, path.build.images, {printSummary: true}))
-		.pipe(browserSync.stream());
-});
-
-gulp.task('fontsSync', function () {
-	return gulp.src('')
-		.pipe(plumber())
-		.pipe(dirSync(path.src.fonts, path.build.fonts, {printSummary: true}))
-		.pipe(browserSync.stream());
-});
-
-// gulp.task('jsSync', function () {
-// 	return gulp.src(build.js + '/**/*.js')
-// 		.pipe(plumber())
-// 		.pipe(gulp.dest(outputDir + 'js/'))
-// 		.pipe(browserSync.stream());
-// });
 //-----------------------------------------------------Compilers
 // pug > html
 gulp.task('pug', function () {
 	gulp.src(path.src.pug)
 		.pipe(plumber({errorHandler: onError}))
 		.pipe(pug({pretty: true}))
-		.pipe(gulp.dest(path.build.html))			  // output html
-        .pipe(reload({stream: true}));
+		.pipe(gulp.dest(path.build.html))
+    .pipe(reload({stream: true}));
 });
 // scss > сss
 gulp.task('sass', function () {
@@ -172,8 +163,8 @@ gulp.task('sass', function () {
 		.pipe(inlineimage())
 		.pipe(plumber({errorHandler: onError}))
 		.pipe(prefix('last 3 versions'))
-		.pipe(gulp.dest(path.build.css))	// output css
-        .pipe(reload({stream: true}));
+		.pipe(gulp.dest(path.build.css))
+    .pipe(reload({stream: true}));
 });
 //js(es6) > js(es3)
 gulp.task('js', rollupJS(nameMainSrcfile, {
@@ -187,10 +178,10 @@ gulp.task('js', rollupJS(nameMainSrcfile, {
 // gulp.task('cleanBuildDir', function (cb) {
 // 	rimraf(path.build.html, cb);
 // });
-// images
+//------------------------------images
 gulp.task('imgBuild', function () {
 	return gulp.src(path.build.image)
-		.pipe(notify({ message: messageBuildImage, onLast: true  }))
+		.pipe(notify({ message: message.build.image , onLast: true  }))
 		.pipe(imagemin({
 			progressive: true,
 			svgoPlugins: [{removeViewBox: false}],
@@ -198,49 +189,49 @@ gulp.task('imgBuild', function () {
 		}))
 		.pipe(gulp.dest(path.prodaction.image))
 });
-// fonts
+//------------------------------fonts
 gulp.task('fontsBuild', function () {
 	return gulp.src(path.build.fonts)
-		.pipe(notify({ message: messageBuildFonts, onLast: true  }))
+		.pipe(notify({ message: message.build.fonts, onLast: true  }))
 		.pipe(gulp.dest(path.prodaction.fonts))
 });
-// html
+//------------------------------html
 gulp.task('htmlBuild', function () {
 	gulp.src(path.build.html + '**/*.html')
-		.pipe(notify({ message: messageBuildHtml, onLast: true  }))
+		.pipe(notify({ message: message.build.html, onLast: true  }))
 		.pipe(prettify.reporter())                        //  указывает имя и формат файлов для prettify
 		.pipe(checkFilesize())                            //  указывает размер файла после обработки
 		.pipe(gulp.dest(path.prodaction.html))            //  Выплюнем их в папку prodaction
 		.pipe(reload({stream: true}))                     //  И перезагрузим наш сервер для обновлений
-	return gulp.src(path.prodaction.html)              	  //  нужно указывать уже файл после beatify прогона
+	return gulp.src(path.prodaction.html)               //  нужно указывать уже файл после beatify прогона
 		.pipe(prettify.validate())                        //  если есть ошибка ее выведет репортер и скажет что сделать!
 		.pipe(prettify.reporter());
 
 });
-// minify js
+//------------------------------minify js
 gulp.task('jsBuild', function () {
 	return gulp.src(path.build.js + '**/*.js')
-		.pipe(notify({ message: messageBuildJs, onLast: true  }))
+		.pipe(notify({ message: message.build.js, onLast: true  }))
 		.pipe(plumber())
 		.pipe(uglify())
 		.pipe(gulp.dest(path.prodaction.js))
 	});
-// minify css
+//------------------------------minify css
 gulp.task('cssBuild', function () {
 	// return gulp.src(path.build.css)
 		// .pipe(purify([outputDir + 'js/**/*', outputDir + '**/*.html'])) // очищение ??
 	gulp.src(path.build.css)
-		.pipe(notify({ message: messageBuildCss, onLast: true  }))
+		.pipe(notify({ message: message.build.css, onLast: true  }))
 		.pipe(plumber())
 	return gulp.src(path.build.css)
         .pipe(uncss({
            html: [path.prodaction.uncssHTML]
         }))
-		.pipe(rename({suffix: '.min'}))               //  Добавляем суффикс .min  к сжатому
+		.pipe(rename({suffix: '.min'}))                   //  Добавляем суффикс .min  к сжатому
 		.pipe(csso())
 		.pipe(checkFilesize())                            //  указывает размер файла после обработки
 		.pipe(gulp.dest(path.prodaction.css))
-	return gulp.src(path.prodaction.css)             //  нужно указывать уже файл после beatify прогона
+	return gulp.src(path.prodaction.css)                //  нужно указывать уже файл после beatify прогона
 		.pipe(prettify.validate())                        //  если есть ошибка ее выведет репортер и скажет что сделать!
 		.pipe(prettify.reporter());
 });
@@ -249,32 +240,35 @@ gulp.task('cssBuild', function () {
 //------------------------------Html
 gulp.task('validation:html', function () {
 	return gulp.src(buildDir + '**/*.html')
-		.pipe(notify({ message: messageValidation, onLast: true  }))
+		.pipe(notify({ message: message.validation.html, onLast: true  }))
 		.pipe(html5Lint());
 });
 //------------------------------Js
 gulp.task('validation:js', () => {
   return gulp.src([path.validation.js,'!node_modules/**'])
+    .pipe(notify({ message: message.validation.js, onLast: true  }))
     .pipe(eslint({
-      fix: true       // редактирует ошибки если может
+      fix: true
     }))
     .pipe(eslint.format())
     gulp.dest(jsFixedLinterOutput)
     .pipe(eslint.results(results => {
-        console.log(`Total Results: ${results.length}`);
-        console.log(`Total Warnings: ${results.warningCount}`);
-        console.log(`Total Errors: ${results.errorCount}`);
+        cl.log(`Total Results: ${results.length}`);
+        cl.log(`Total Warnings: ${results.warningCount}`);
+        cl.log(`Total Errors: ${results.errorCount}`);
     }))
 });
 //------------------------------------------------Testing
 //------------------------------Mocha
 gulp.task('test:mocha', () =>
-    gulp.src(path.tests.mocha) //
-    	.pipe(notify({ message: messageTesting, onLast: true  }))
-      .pipe(mocha())
+  gulp.src('')
+    .pipe(notify({ message: message.tests.mocha, onLast: true  }))
+    .pipe(mocha())
 );
 //------------------------------Jasmine
 gulp.task('test:jasmine', () => {
+  gulp.src('')
+    .pipe(notify({ message: message.tests.jasmine, onLast: true  }))
   jasmine.loadConfig(jasmineConfig);
   jasmine.jasmine.DEFAULT_TIMEOUT_INTERVAL = 15000;
   jasmine.env.clearReporters();
@@ -283,18 +277,29 @@ gulp.task('test:jasmine', () => {
 });
 //------------------------------GUI tests
 gulp.task('test:gui', () => {
+  gulp.src('')
+    .pipe(notify({ message: message.tests.gui, onLast: true  }))
   runCmd(commandGuiTests);
 });
 //------------------------------GUI screenshots
-gulp.task('screenshots0', () => {
+gulp.task('screenshots', () => {
+  gulp.src(path.tests.screenshots)
+    .pipe(notify({ message: message.tests.screenshots, onLast: false  }))
   runCmd(commandCreateScreenshots);
 });
 //------------------------------------------------Documentation
 //------------------------------JsDoc
 gulp.task('jsDoc', function (cb) {
-    gulp.src([path.docs.jsDoc, `${path.build.js}index.js`], {read: false})
+  gulp.src([path.docs.jsDoc, `${path.build.js}index.js`], {read: false})
+    .pipe(notify({ message: message.documentation.jsDoc, onLast: false  }))
     .pipe(jsdoc(jsDocConfig, cb));
 });
+//------------------------------Readme
+// gulp.task('readme', function (cb) {
+//   gulp.src()
+//     .pipe(notify({ message: message.documentation.readme, onLast: false  }))
+
+// });
 /******************************************************************
 
 							TASKS
@@ -305,13 +310,11 @@ gulp.task('default', ['pug', 'sass', 'js', 'imageSync', 'fontsSync', 'watch', 'b
 // for production
 gulp.task('build', ['fontsBuild', 'htmlBuild', 'jsBuild', 'cssBuild'] ); //,
 gulp.task('validation', ['validation:html', 'validation:js']);
-// добавить тесты,документацию
 
 // test:unit - юнит тесты
 // test:e2e - 2e2 тесты
 
 // "gulp documentation" - запуск генерации всех типов документации
-// documentation:bundleReadme - сборка реадме по сусекам ?? Или на прямую использовать апи моего модуля
 
 // documentation:license - генерация лицензии ?? Или на прямую использовать апи моего модуля
-//     // "test": "gulp test",
+// "test": "gulp test",
