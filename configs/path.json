@@ -56,6 +56,12 @@
       "jsDoc": "docs/jsDoc/README.md",
       "scrennshotesWebSite": "prodaction/SCREENSHOTS/",
       "scrennshotesProjectElp": "docs/images/screenshots"
+   },
+   "scrennshotes": {
+    "mainPage":"prodaction/SCREENSHOTS/main_page",
+    "aboutPage":"prodaction/SCREENSHOTS/about_page",
+    "contactsPage":"prodaction/SCREENSHOTS/contacts_page"
    }
+
 }
 
