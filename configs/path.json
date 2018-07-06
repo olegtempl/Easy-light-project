@@ -29,7 +29,9 @@
       "fonts": "src/fonts/**/*"
    },
    "tests": {
-      "mocha": "test/mocha/spec.js"
+      "mocha": "test/mocha/spec.js",
+      "gui": "test/gui/spec.js",
+      "screenshots": "test/gui/spec.js"
    },
    "validation": {
       "html": "build/*.html",
@@ -46,8 +48,8 @@
    "commands": {
     "serverSelenium": "./configs/shell_commands/serverSelenium.js",
     "runCmd": "./configs/shell_commands/runCmd.js",
-    "": "./configs/shell_commands",
-    "": "./configs/shell_commands",
+    "guiTests": "./configs/shell_commands/guiTests.js",
+    "guiSreenshots": "./configs/shell_commands/takeGuiSreenshots.js",
     "": "./configs/shell_commands"
    },
    "docs": {

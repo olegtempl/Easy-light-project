@@ -63,12 +63,12 @@ const commandServerSelenium = require(path.commands.serverSelenium);
 //-----------------------------------------------------Shell commands
 //------------------------------Start shell commands
 const runCmd = require(path.commands.runCmd);
+//------------------------------Start the gui tests
+const commandGuiTests = require(path.commands.guiTests);
 //------------------------------
-// const = require(path.shellCommands.);
+const commandCreateScreenshots = require(path.commands.guiSreenshots);
 //------------------------------
-// const = require(path.shellCommands.);
-//------------------------------
-// const = require(path.shellCommands.);
+// const = require(path.commands.);
 
 
 //------------------------------Bundler (RoolUp)
@@ -271,7 +271,7 @@ gulp.task('validation:js', () => {
 gulp.task('test:mocha', () =>
     gulp.src(path.tests.mocha) //
     	.pipe(notify({ message: messageTesting, onLast: true  }))
-        .pipe(mocha())
+      .pipe(mocha())
 );
 //------------------------------Jasmine
 gulp.task('test:jasmine', () => {
@@ -280,6 +280,14 @@ gulp.task('test:jasmine', () => {
   jasmine.env.clearReporters();
   jasmine.addReporter(reporter);
   jasmine.execute();
+});
+//------------------------------GUI tests
+gulp.task('test:gui', () => {
+  runCmd(commandGuiTests);
+});
+//------------------------------GUI screenshots
+gulp.task('screenshots0', () => {
+  runCmd(commandCreateScreenshots);
 });
 //------------------------------------------------Documentation
 //------------------------------JsDoc

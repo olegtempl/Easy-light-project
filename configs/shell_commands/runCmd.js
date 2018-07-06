@@ -15,7 +15,7 @@ function runcmd(command) {
             cl.log('');
             cl.red(`exec error: ${error}`);
             cl.log('');
-          }
+          };
     });
   };
 };
