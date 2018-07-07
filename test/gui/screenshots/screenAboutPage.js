@@ -7,9 +7,7 @@ const pageres = new Pageres({delay: 2})
 	.dest(path.scrennshotes.aboutPage)
 	.run()
 	.then(() => {
-    cl.log('');
     cl.gre('Create sreenshotes "About" page - done');
-    cl.log('');
   });
 
 module.exports = pageres;
