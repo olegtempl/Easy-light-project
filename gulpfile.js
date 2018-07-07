@@ -11,7 +11,8 @@ const	gulp = require('gulp'),
 		dirSync = require('gulp-directory-sync'),
 		browserSync = require('browser-sync'),
 		reload = browserSync.reload,
-		checkFilesize = require("gulp-check-filesize"),
+    checkFilesize = require("gulp-check-filesize"),
+    zip = require('gulp-zip'),
 		prettify = require('gulp-jsbeautifier');
 // plugins for rollup
 const	rollup = require('rollup-stream'),
@@ -47,9 +48,12 @@ const jsdoc = require('gulp-jsdoc3');
 // others
 const cl = require('node-cl-log');
 
+
+
+//------------------------------All paths on project
+const path = require('./configs/path.json');
 //------------------------------Messages for tasks
 const message = require(path.messages);
-//------------------------------All paths on project
 //-----------------------------------------------------Servers
 //------------------------------Livereload
 const configServerLivereload = require(path.configs.serverLive);
@@ -68,21 +72,21 @@ const commandCreateScreenshots = require(path.commands.guiSreenshots);
 // const = require(path.commands.);
 //-------------------------------------------------Servers
 //------------------------------Livepreload
-gulp.task('server', function () {
+gulp.task('server', () => {
     browserSync(configServerTunnel);
 });
 //------------------------------Local Server
-gulp.task('browser-sync', function () {
+gulp.task('browser-sync', () => {
 	browserSync(configServerLivereload);
 });
 //------------------------------Selenium Server
-gulp.task('selenium', function () {
+gulp.task('selenium', () => {
   gulp.src('')
   .pipe(notify({ message: message.servers.selenium , onLast: true  }))
   runCmd(commandServerSelenium);
 });
 //-------------------------------------------------Watchers
-gulp.task('watch', function () {
+gulp.task('watch', () => {
 	gulp.watch(path.watch.pug, ['pug']);
 	gulp.watch(path.watch.scss, ['sass']);
 	gulp.watch(path.watch.js, ['js']);
@@ -91,14 +95,14 @@ gulp.task('watch', function () {
 });
 //-------------------------------------------------Synchronization
 // Task for synchronizing project folders with each other:
-gulp.task('imageSync', function () {
+gulp.task('imageSync', () => {
 	return gulp.src('')
 		.pipe(plumber())
 		.pipe(dirSync(path.src.images, path.build.images, {printSummary: true}))
 		.pipe(browserSync.stream());
 });
 
-gulp.task('fontsSync', function () {
+gulp.task('fontsSync', () => {
 	return gulp.src('')
 		.pipe(plumber())
 		.pipe(dirSync(path.src.fonts, path.build.fonts, {printSummary: true}))
@@ -108,7 +112,7 @@ gulp.task('fontsSync', function () {
 /* cjs - nodejs
  * iife - browser
  *  */
-const path = require('./configs/path.json');
+
 //------------------------------Babel
 const babelConfig = require(path.configs.babel);
 //------------------------------JsDoc
@@ -139,7 +143,7 @@ const rollupJS = (inputFile, options) => {
 };
 //-----------------------------------------------------Errors
 //------------------------------Error handler
-const onError = function (err) {
+const onError = (err) => {
   notify.onError({
     title: 'Gulp',
     subtitle: 'Ahtung!',
@@ -149,7 +153,7 @@ const onError = function (err) {
 };
 //-----------------------------------------------------Compilers
 // pug > html
-gulp.task('pug', function () {
+gulp.task('pug', () => {
 	gulp.src(path.src.pug)
 		.pipe(plumber({errorHandler: onError}))
 		.pipe(pug({pretty: true}))
@@ -157,7 +161,7 @@ gulp.task('pug', function () {
     .pipe(reload({stream: true}));
 });
 // scss > сss
-gulp.task('sass', function () {
+gulp.task('sass', () => {
 	gulp.src(path.src.scss)
 		.pipe(sass())
 		.pipe(inlineimage())
@@ -179,7 +183,7 @@ gulp.task('js', rollupJS(nameMainSrcfile, {
 // 	rimraf(path.build.html, cb);
 // });
 //------------------------------images
-gulp.task('imgBuild', function () {
+gulp.task('imgBuild', () => {
 	return gulp.src(path.build.image)
 		.pipe(notify({ message: message.build.image , onLast: true  }))
 		.pipe(imagemin({
@@ -190,13 +194,13 @@ gulp.task('imgBuild', function () {
 		.pipe(gulp.dest(path.prodaction.image))
 });
 //------------------------------fonts
-gulp.task('fontsBuild', function () {
+gulp.task('fontsBuild', () => {
 	return gulp.src(path.build.fonts)
 		.pipe(notify({ message: message.build.fonts, onLast: true  }))
 		.pipe(gulp.dest(path.prodaction.fonts))
 });
 //------------------------------html
-gulp.task('htmlBuild', function () {
+gulp.task('htmlBuild', () => {
 	gulp.src(path.build.html + '**/*.html')
 		.pipe(notify({ message: message.build.html, onLast: true  }))
 		.pipe(prettify.reporter())                        //  указывает имя и формат файлов для prettify
@@ -209,7 +213,7 @@ gulp.task('htmlBuild', function () {
 
 });
 //------------------------------minify js
-gulp.task('jsBuild', function () {
+gulp.task('jsBuild',  () => {
 	return gulp.src(path.build.js + '**/*.js')
 		.pipe(notify({ message: message.build.js, onLast: true  }))
 		.pipe(plumber())
@@ -217,7 +221,7 @@ gulp.task('jsBuild', function () {
 		.pipe(gulp.dest(path.prodaction.js))
 	});
 //------------------------------minify css
-gulp.task('cssBuild', function () {
+gulp.task('cssBuild', () =>  {
 	// return gulp.src(path.build.css)
 		// .pipe(purify([outputDir + 'js/**/*', outputDir + '**/*.html'])) // очищение ??
 	gulp.src(path.build.css)
@@ -235,10 +239,15 @@ gulp.task('cssBuild', function () {
 		.pipe(prettify.validate())                        //  если есть ошибка ее выведет репортер и скажет что сделать!
 		.pipe(prettify.reporter());
 });
-
+//------------------------------Archive creation
+gulp.task('zip', () =>
+    gulp.src(path.prodaction.html)
+        .pipe(zip('site.zip'))
+        .pipe(gulp.dest(path.prodaction.html))
+);
 //------------------------------------------------Validation
 //------------------------------Html
-gulp.task('validation:html', function () {
+gulp.task('validation:html', () => {
 	return gulp.src(buildDir + '**/*.html')
 		.pipe(notify({ message: message.validation.html, onLast: true  }))
 		.pipe(html5Lint());
@@ -289,7 +298,7 @@ gulp.task('screenshots', () => {
 });
 //------------------------------------------------Documentation
 //------------------------------JsDoc
-gulp.task('jsDoc', function (cb) {
+gulp.task('jsDoc', (cb) => {
   gulp.src([path.docs.jsDoc, `${path.build.js}index.js`], {read: false})
     .pipe(notify({ message: message.documentation.jsDoc, onLast: false  }))
     .pipe(jsdoc(jsDocConfig, cb));

@@ -6,9 +6,7 @@ const makeSreenshotsAboutPage = require('./screenshots/screenAboutPage');
 const makeSreenshotsContactsPage = require('./screenshots/screenContactsPage');
 
 
-cl.log('');
 cl.log('Start create the screenshot site!');
-cl.log('');
 
 // takeSreenshots
 
@@ -29,6 +27,4 @@ makeSreenshotsMainPage
 makeSreenshotsAboutPage
 makeSreenshotsContactsPage
 
-cl.log('');
 cl.gre('End create the screenshot site!');
-cl.log('');

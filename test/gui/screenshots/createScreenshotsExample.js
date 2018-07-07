@@ -9,9 +9,7 @@ const pageres = new Pageres({delay: 2})
 	.dest(path.docs.scrennshotesWebSite)
 	.run()
 	.then(() => {
-    cl.log('');
     cl.gre('Create sreenshotes done');
-    cl.log('');
   });
 
 module.exports = pageres;
