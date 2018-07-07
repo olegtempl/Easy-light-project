@@ -11,7 +11,8 @@ const	gulp = require('gulp'),
 		dirSync = require('gulp-directory-sync'),
 		browserSync = require('browser-sync'),
 		reload = browserSync.reload,
-		checkFilesize = require("gulp-check-filesize"),
+    checkFilesize = require("gulp-check-filesize"),
+    zip = require('gulp-zip'),
 		prettify = require('gulp-jsbeautifier');
 // plugins for rollup
 const	rollup = require('rollup-stream'),
@@ -47,9 +48,12 @@ const jsdoc = require('gulp-jsdoc3');
 // others
 const cl = require('node-cl-log');
 
+
+
+//------------------------------All paths on project
+const path = require('./configs/path.json');
 //------------------------------Messages for tasks
 const message = require(path.messages);
-//------------------------------All paths on project
 //-----------------------------------------------------Servers
 //------------------------------Livereload
 const configServerLivereload = require(path.configs.serverLive);
@@ -108,7 +112,7 @@ gulp.task('fontsSync', function () {
 /* cjs - nodejs
  * iife - browser
  *  */
-const path = require('./configs/path.json');
+
 //------------------------------Babel
 const babelConfig = require(path.configs.babel);
 //------------------------------JsDoc
@@ -209,7 +213,7 @@ gulp.task('htmlBuild', function () {
 
 });
 //------------------------------minify js
-gulp.task('jsBuild', function () {
+gulp.task('jsBuild',  () => {
 	return gulp.src(path.build.js + '**/*.js')
 		.pipe(notify({ message: message.build.js, onLast: true  }))
 		.pipe(plumber())
@@ -217,7 +221,7 @@ gulp.task('jsBuild', function () {
 		.pipe(gulp.dest(path.prodaction.js))
 	});
 //------------------------------minify css
-gulp.task('cssBuild', function () {
+gulp.task('cssBuild', () =>  {
 	// return gulp.src(path.build.css)
 		// .pipe(purify([outputDir + 'js/**/*', outputDir + '**/*.html'])) // очищение ??
 	gulp.src(path.build.css)
@@ -235,7 +239,12 @@ gulp.task('cssBuild', function () {
 		.pipe(prettify.validate())                        //  если есть ошибка ее выведет репортер и скажет что сделать!
 		.pipe(prettify.reporter());
 });
-
+//------------------------------Archive creation
+gulp.task('zip', () =>
+    gulp.src(path.prodaction.html)
+        .pipe(zip('site.zip'))
+        .pipe(gulp.dest(path.prodaction.html))
+);
 //------------------------------------------------Validation
 //------------------------------Html
 gulp.task('validation:html', function () {

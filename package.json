@@ -61,6 +61,7 @@
     "gulp-sass": "^3.2.1",
     "gulp-uglify": "^3.0.0",
     "gulp-uncss": "^1.0.6",
+    "gulp-zip": "^4.1.0",
     "imagemin-pngquant": "^5.1.0",
     "jasmine-console-reporter": "^3.0.2",
     "mocha": "^5.0.1",
