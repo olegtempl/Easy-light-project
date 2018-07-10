@@ -14,7 +14,8 @@
       "mocha": "Start the Mocha tests",
       "jasmine": "Start the Jasmine tests",
       "gui": "Start the Gui tests",
-      "screenshots": "Start the make screenshots"
+      "screenshots": "Start the make screenshots",
+      "pageSpeed": "Start the page speed tests"
     },
     "servers": {
       "selenium": "Start the selenium server"

@@ -1,6 +1,6 @@
 {
    "src": {
-      "pug": "src/pug/**/*.pug",
+      "pug": "src/pug/*.pug",
       "js": "src/js/",
       "scss": "src/styles/**/*.scss",
       "images": "src/images/",
@@ -18,11 +18,10 @@
       "js": "prodaction/js/",
       "css": "prodaction/styles/",
       "images": "prodaction/images/",
-      "fonts": "prodaction/fonts/",
-      "uncssHTML": "prodaction/**/*.html"
+      "fonts": "prodaction/fonts/"
    },
    "watch": {
-      "pug": "src/pug/**/*.pug",
+      "pug": "src/pug/**/**/*.pug",
       "js": "src/js/**/*.js",
       "scss": "src/styles/**/*.scss",
       "images": "src/images/**/*",
@@ -31,8 +30,9 @@
    "tests": {
       "mocha": "test/mocha/spec.js",
       "jasmine": "test/jasmine/spec.js",
-      "gui": "test/gui/spec_userstory.js",
-      "screenshots": "test/gui/spec_screenshots.js"
+      "gui": "test/browser/gui/spec_userstory.js",
+      "screenshots": "test/browser/gui/spec_screenshots.js",
+      "pageSpeed": "test/browser/page_speed/spec.js"
    },
    "validation": {
       "html": "build/*.html",
@@ -51,7 +51,7 @@
     "runCmd": "./configs/shell_commands/runCmd.js",
     "guiTests": "./configs/shell_commands/guiTests.js",
     "guiSreenshots": "./configs/shell_commands/takeGuiSreenshots.js",
-    "": "./configs/shell_commands"
+    "pageSpeed": "./configs/shell_commands/pageSpeed.js"
    },
    "docs": {
       "jsDoc": "docs/jsDoc/README.md",
