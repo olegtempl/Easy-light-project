@@ -29,6 +29,7 @@ const 	purify = require('gulp-purifycss'),
 		pngquant = require('imagemin-pngquant'),
 		uncss = require('gulp-uncss'),
 		cssmin = require('gulp-minify-css'),
+		htmlmin = require('gulp-html-minifier'),
 		csso = require('gulp-csso');
 // plugins for tests
 const   mocha = require('gulp-mocha');
@@ -68,6 +69,8 @@ const runCmd = require(path.commands.runCmd);
 const commandGuiTests = require(path.commands.guiTests);
 //------------------------------Start the make scrennshotes
 const commandCreateScreenshots = require(path.commands.guiSreenshots);
+//------------------------------Start the make scrennshotes
+const commandPageSpeedTests = require(path.commands.pageSpeed);
 //------------------------------
 // const = require(path.commands.);
 //-------------------------------------------------Servers
@@ -201,13 +204,14 @@ gulp.task('fontsBuild', () => {
 });
 //------------------------------html
 gulp.task('htmlBuild', () => {
-	gulp.src(path.build.html + '**/*.html')
+	gulp.src(path.build.html + '*.html')
 		.pipe(notify({ message: message.build.html, onLast: true  }))
+		.pipe(htmlmin({collapseWhitespace: true}))
 		.pipe(prettify.reporter())                        //  указывает имя и формат файлов для prettify
 		.pipe(checkFilesize())                            //  указывает размер файла после обработки
 		.pipe(gulp.dest(path.prodaction.html))            //  Выплюнем их в папку prodaction
 		.pipe(reload({stream: true}))                     //  И перезагрузим наш сервер для обновлений
-	return gulp.src(path.prodaction.html)               //  нужно указывать уже файл после beatify прогона
+	return gulp.src(path.prodaction.html)                 //  нужно указывать уже файл после beatify прогона
 		.pipe(prettify.validate())                        //  если есть ошибка ее выведет репортер и скажет что сделать!
 		.pipe(prettify.reporter());
 
@@ -224,19 +228,17 @@ gulp.task('jsBuild',  () => {
 gulp.task('cssBuild', () =>  {
 	// return gulp.src(path.build.css)
 		// .pipe(purify([outputDir + 'js/**/*', outputDir + '**/*.html'])) // очищение ??
-	gulp.src(path.build.css)
+	gulp.src(path.build.css  + 'index.css')
 		.pipe(notify({ message: message.build.css, onLast: true  }))
 		.pipe(plumber())
-	return gulp.src(path.build.css)
         .pipe(uncss({
-           html: [path.prodaction.uncssHTML]
+           html: [path.prodaction.html + '**/*.html']
         }))
-		.pipe(rename({suffix: '.min'}))                   //  Добавляем суффикс .min  к сжатому
 		.pipe(csso())
-		.pipe(checkFilesize())                            //  указывает размер файла после обработки
+		.pipe(checkFilesize())                          //  указывает размер файла после обработки
 		.pipe(gulp.dest(path.prodaction.css))
 	return gulp.src(path.prodaction.css)                //  нужно указывать уже файл после beatify прогона
-		.pipe(prettify.validate())                        //  если есть ошибка ее выведет репортер и скажет что сделать!
+		.pipe(prettify.validate())                      //  если есть ошибка ее выведет репортер и скажет что сделать!
 		.pipe(prettify.reporter());
 });
 //------------------------------Archive creation
@@ -295,6 +297,12 @@ gulp.task('screenshots', () => {
   gulp.src(path.tests.screenshots)
     .pipe(notify({ message: message.tests.screenshots, onLast: false  }))
   runCmd(commandCreateScreenshots);
+});
+//------------------------------Page speed screenshots
+gulp.task('speed', () => {
+  gulp.src(path.tests.pageSpeed)
+    .pipe(notify({ message: message.tests.pageSpeed, onLast: false  }))
+  runCmd(commandPageSpeedTests);
 });
 //------------------------------------------------Documentation
 //------------------------------JsDoc

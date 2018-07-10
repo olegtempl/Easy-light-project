@@ -12,9 +12,7 @@ function runcmd(command) {
         cl.log(`${stdout}`);
         cl.log(`${stderr}`);
         if (error !== null) {
-            cl.log('');
             cl.red(`exec error: ${error}`);
-            cl.log('');
           };
     });
   };
