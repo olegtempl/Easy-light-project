@@ -14,11 +14,11 @@
       "fonts": "build/fonts/**/*"
    },
    "prodaction": {
-      "html": "prodaction/",
-      "js": "prodaction/js/",
-      "css": "prodaction/styles/",
-      "images": "prodaction/images/",
-      "fonts": "prodaction/fonts/"
+      "html": "public/",
+      "js": "public/js/",
+      "css": "public/styles/",
+      "images": "public/images/",
+      "fonts": "public/fonts/"
    },
    "watch": {
       "pug": "src/pug/**/**/*.pug",
