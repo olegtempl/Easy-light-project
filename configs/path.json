@@ -10,8 +10,8 @@
       "html": "build/",
       "js": "build/js/",
       "css": "build/styles/",
-      "images": "build/images/**/*",
-      "fonts": "build/fonts/**/*"
+      "images": "build/images",
+      "fonts": "build/fonts"
    },
    "prodaction": {
       "html": "public/",
