@@ -48,9 +48,6 @@ const eslint = require('gulp-eslint'),
 const jsdoc = require('gulp-jsdoc3');
 // others
 const cl = require('node-cl-log');
-
-
-
 //------------------------------All paths on project
 const path = require('./configs/path.json');
 //------------------------------Messages for tasks
@@ -97,14 +94,17 @@ gulp.task('watch', () => {
 	gulp.watch(path.watch.fonts + '**/*',  ['fontsSync']);
 });
 //-------------------------------------------------Synchronization
-// Task for synchronizing project folders with each other:
+//
+/**
+ * @description Task for synchronizing folders for images and fonts
+ *
+ */
 gulp.task('imageSync', () => {
 	return gulp.src('')
 		.pipe(plumber())
 		.pipe(dirSync(path.src.images, path.build.images, {printSummary: true}))
 		.pipe(browserSync.stream());
 });
-
 gulp.task('fontsSync', () => {
 	return gulp.src('')
 		.pipe(plumber())
@@ -115,7 +115,10 @@ gulp.task('fontsSync', () => {
 /* cjs - nodejs
  * iife - browser
  *  */
-
+/**
+ * @description Task for run babel and rollup
+ *
+ */
 //------------------------------Babel
 const babelConfig = require(path.configs.babel);
 //------------------------------JsDoc
@@ -155,7 +158,10 @@ const onError = (err) => {
   this.emit('end');
 };
 //-----------------------------------------------------Compilers
-// pug > html
+/**
+ * @description Task for render pug to html
+ * @return static html files
+ */
 gulp.task('pug', () => {
 	gulp.src(path.src.pug)
 		.pipe(plumber())
@@ -163,7 +169,10 @@ gulp.task('pug', () => {
 		.pipe(gulp.dest(path.build.html))
     .pipe(reload({stream: true}));
 });
-// scss > сss
+/**
+ * @description Task for render scss to css
+ * @return static css file
+ */
 gulp.task('sass', () => {
 	gulp.src(path.src.scss)
 		.pipe(sass())
@@ -173,19 +182,22 @@ gulp.task('sass', () => {
 		.pipe(gulp.dest(path.build.css))
     .pipe(reload({stream: true}));
 });
-//js(es6) > js(es3)
+/**
+ * @description Task for render js(es6) > js(es3)
+ * @return bundle file
+ */
 gulp.task('js', rollupJS(nameMainSrcfile, {
 	basePath: path.src.js,
 	format: typeModules,
 	distPath: path.build.js,
 	sourcemap: sourceMap
-  }));
+}));
 //------------------------------------------------Building prodaction
-//------------------------------clean folder `build`
-// gulp.task('cleanBuildDir', function (cb) {
-// 	rimraf(path.build.html, cb);
-// });
 //------------------------------images
+/**
+ * @description Task for minifacation and optimisation images
+ * @return optimisation images
+ */
 gulp.task('imgBuild', () => {
 	return gulp.src(path.build.image)
 		.pipe(notify({ message: message.build.image , onLast: true  }))
@@ -197,26 +209,38 @@ gulp.task('imgBuild', () => {
 		.pipe(gulp.dest(path.prodaction.image))
 });
 //------------------------------fonts
+/**
+ * @description Task for synchronisation fonts
+ * @return fonts
+ */
 gulp.task('fontsBuild', () => {
 	return gulp.src(path.build.fonts)
 		.pipe(notify({ message: message.build.fonts, onLast: true  }))
 		.pipe(gulp.dest(path.prodaction.fonts))
 });
 //------------------------------html
+/**
+ * @description Task for minifacation and validation static html files
+ * @return minifacation html files
+ */
 gulp.task('htmlBuild', () => {
 	gulp.src(path.build.html + '*.html')
 		.pipe(notify({ message: message.build.html, onLast: true  }))
 		.pipe(htmlmin({collapseWhitespace: true}))
-		.pipe(prettify.reporter())                        //  указывает имя и формат файлов для prettify
-		.pipe(checkFilesize())                            //  указывает размер файла после обработки
-		.pipe(gulp.dest(path.prodaction.html))            //  Выплюнем их в папку prodaction
-		.pipe(reload({stream: true}))                     //  И перезагрузим наш сервер для обновлений
-	return gulp.src(path.prodaction.html)                 //  нужно указывать уже файл после beatify прогона
-		.pipe(prettify.validate())                        //  если есть ошибка ее выведет репортер и скажет что сделать!
+		.pipe(prettify.reporter())
+		.pipe(checkFilesize())
+		.pipe(gulp.dest(path.prodaction.html))
+		.pipe(reload({stream: true}))
+	return gulp.src(path.prodaction.html)               //  you need to specify the file after the beatify run
+		.pipe(prettify.validate())                        //  if there is a mistake it will bring the reporter out and say what to do!
 		.pipe(prettify.reporter());
 
 });
 //------------------------------minify js
+/**
+ * @description Task for minifacation static js files
+ * @return minifacation js files
+ */
 gulp.task('jsBuild',  () => {
 	return gulp.src(path.build.js + '**/*.js')
 		.pipe(notify({ message: message.build.js, onLast: true  }))
@@ -225,9 +249,11 @@ gulp.task('jsBuild',  () => {
 		.pipe(gulp.dest(path.prodaction.js))
 	});
 //------------------------------minify css
+/**
+ * @description Task for minifacation and validation static css files
+ * @return minifacation css files
+ */
 gulp.task('cssBuild', () =>  {
-	// return gulp.src(path.build.css)
-		// .pipe(purify([outputDir + 'js/**/*', outputDir + '**/*.html'])) // очищение ??
 	gulp.src(path.build.css  + 'index.css')
 		.pipe(notify({ message: message.build.css, onLast: true  }))
 		.pipe(plumber())
@@ -235,13 +261,17 @@ gulp.task('cssBuild', () =>  {
            html: [path.prodaction.html + '**/*.html']
         }))
 		.pipe(csso())
-		.pipe(checkFilesize())                          //  указывает размер файла после обработки
+		.pipe(checkFilesize())
 		.pipe(gulp.dest(path.prodaction.css))
-	return gulp.src(path.prodaction.css)                //  нужно указывать уже файл после beatify прогона
-		.pipe(prettify.validate())                      //  если есть ошибка ее выведет репортер и скажет что сделать!
+	return gulp.src(path.prodaction.css)              //  you need to specify the file after the beatify run
+		.pipe(prettify.validate())                      //  if there is a mistake it will bring the reporter out and say what to do!
 		.pipe(prettify.reporter());
 });
 //------------------------------Archive creation
+/**
+ * @description Task for archivated static files the final version to archive
+ * @return archive of project
+ */
 gulp.task('zip', () =>
     gulp.src(path.prodaction.html)
         .pipe(zip('site.zip'))
@@ -249,12 +279,20 @@ gulp.task('zip', () =>
 );
 //------------------------------------------------Validation
 //------------------------------Html
+/**
+ * @description Task for validation static html files
+ * @return message for results of validation
+ */
 gulp.task('validation:html', () => {
 	return gulp.src(buildDir + '**/*.html')
 		.pipe(notify({ message: message.validation.html, onLast: true  }))
 		.pipe(html5Lint());
 });
 //------------------------------Js
+/**
+ * @description Task for validation static js files
+ * @return message for results of validation
+ */
 gulp.task('validation:js', () => {
   return gulp.src([path.validation.js,'!node_modules/**'])
     .pipe(notify({ message: message.validation.js, onLast: true  }))
@@ -271,12 +309,20 @@ gulp.task('validation:js', () => {
 });
 //------------------------------------------------Testing
 //------------------------------Mocha
+/**
+ * @description Task for start the specs for mocha tests
+ * @return results the tests
+ */
 gulp.task('test:mocha', () =>
   gulp.src('')
     .pipe(notify({ message: message.tests.mocha, onLast: true  }))
     .pipe(mocha())
 );
 //------------------------------Jasmine
+/**
+ * @description Task for start the specs for jasmine  tests
+ * @return results the tests
+ */
 gulp.task('test:jasmine', () => {
   gulp.src('')
     .pipe(notify({ message: message.tests.jasmine, onLast: true  }))
@@ -287,18 +333,30 @@ gulp.task('test:jasmine', () => {
   jasmine.execute();
 });
 //------------------------------GUI tests
+/**
+ * @description Task for start the specs for gui tests
+ * @return results the tests
+ */
 gulp.task('test:gui', () => {
   gulp.src('')
     .pipe(notify({ message: message.tests.gui, onLast: true  }))
   runCmd(commandGuiTests);
 });
 //------------------------------GUI screenshots
+/**
+ * @description Task for start the take screenshots for specs
+ * @return static images-screenshots
+ */
 gulp.task('screenshots', () => {
   gulp.src(path.tests.screenshots)
     .pipe(notify({ message: message.tests.screenshots, onLast: false  }))
   runCmd(commandCreateScreenshots);
 });
-//------------------------------Page speed screenshots
+//------------------------------Page speed tests
+/**
+ * @description Task for start the specs for page analyzer tests
+ * @return results the tests
+ */
 gulp.task('speed', () => {
   gulp.src(path.tests.pageSpeed)
     .pipe(notify({ message: message.tests.pageSpeed, onLast: false  }))
@@ -306,32 +364,48 @@ gulp.task('speed', () => {
 });
 //------------------------------------------------Documentation
 //------------------------------JsDoc
+/**
+ * @description Task for generation documentation through the jsDoc
+ * @return static documentation on docs directory
+ */
 gulp.task('jsDoc', (cb) => {
   gulp.src([path.docs.jsDoc, `${path.build.js}index.js`], {read: false})
     .pipe(notify({ message: message.documentation.jsDoc, onLast: false  }))
     .pipe(jsdoc(jsDocConfig, cb));
 });
 //------------------------------Readme
+/**
+ * @description Task for generation documentation through the readme-bundler
+ * @return static documentation on docs directory or project root on main file README
+ */
 // gulp.task('readme', function (cb) {
 //   gulp.src()
 //     .pipe(notify({ message: message.documentation.readme, onLast: false  }))
 
 // });
-/******************************************************************
+//------------------------------License
+/**
+ * @description Task for generation license file and copyright for all files in project
+ * @return modified files with the copier added to them and the updated license file
+ */
+// gulp.task('license', function (cb) {
+//   gulp.src()
+//     .pipe(notify({ message: message.documentation.license, onLast: false  }))
 
-							TASKS
-
-*******************************************************************/
-// for development
+// });
+/**
+ * @description Task on project for development mode
+ */
 gulp.task('default', ['pug', 'sass', 'js', 'imageSync', 'fontsSync', 'watch', 'browser-sync']);
-// for production
-gulp.task('build', ['fontsBuild', 'htmlBuild', 'jsBuild', 'cssBuild'] ); //,
+/**
+ * @description Task on project for production mode
+ */
+gulp.task('build', ['fontsBuild', 'htmlBuild', 'jsBuild', 'cssBuild'] );
+/**
+ * @description Task on project for run validation for all types of files
+ */
 gulp.task('validation', ['validation:html', 'validation:js']);
-
-// test:unit - юнит тесты
-// test:e2e - 2e2 тесты
-
-// "gulp documentation" - запуск генерации всех типов документации
-
-// documentation:license - генерация лицензии ?? Или на прямую использовать апи моего модуля
-// "test": "gulp test",
+/**
+ * @description Task on project for start generation of all types of documentation
+ */
+gulp.task('documentation', ['jsDoc', 'readme']);
