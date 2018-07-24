@@ -388,7 +388,7 @@ gulp.task('doc:jsdoc', (cb) => {
  * @description Task for generation license file and copyright for all files in project
  * @return modified files with the copier added to them and the updated license file
  */
-// gulp.task('license', function (cb) {
+// gulp.task('doc:license', function (cb) {
 //   gulp.src()
 //     .pipe(notify({ message: message.documentation.license, onLast: false  }))
 
@@ -409,6 +409,10 @@ gulp.task('view', ['zip', 'server']);
  * @description Task on project for run validation for all types of files
  */
 gulp.task('validation', ['validation:html', 'validation:js']);
+/**
+ * @description Task on project for all documentation services
+ */
+gulp.task('doc', ['doc:jsdoc', 'doc:readme', 'doc:license']);
 /**
  * @description Task on project for start generation of all types of documentation
  */
