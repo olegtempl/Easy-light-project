@@ -11,8 +11,8 @@ const	gulp = require('gulp'),
 		dirSync = require('gulp-directory-sync'),
 		browserSync = require('browser-sync'),
 		reload = browserSync.reload,
-    checkFilesize = require("gulp-check-filesize"),
-    zip = require('gulp-zip'),
+	    checkFilesize = require("gulp-check-filesize"),
+	    zip = require('gulp-zip'),
 		prettify = require('gulp-jsbeautifier');
 // plugins for rollup
 const	rollup = require('rollup-stream'),
@@ -357,7 +357,7 @@ gulp.task('screenshots', () => {
  * @description Task for start the specs for page analyzer tests
  * @return results the tests
  */
-gulp.task('speed', () => {
+gulp.task('test:speed', () => {
   gulp.src(path.tests.pageSpeed)
     .pipe(notify({ message: message.tests.pageSpeed, onLast: false  }))
   runCmd(commandPageSpeedTests);
@@ -368,7 +368,7 @@ gulp.task('speed', () => {
  * @description Task for generation documentation through the jsDoc
  * @return static documentation on docs directory
  */
-gulp.task('jsDoc', (cb) => {
+gulp.task('doc:jsdoc', (cb) => {
   gulp.src([path.docs.jsDoc, `${path.build.js}index.js`], {read: false})
     .pipe(notify({ message: message.documentation.jsDoc, onLast: false  }))
     .pipe(jsdoc(jsDocConfig, cb));
@@ -378,7 +378,7 @@ gulp.task('jsDoc', (cb) => {
  * @description Task for generation documentation through the readme-bundler
  * @return static documentation on docs directory or project root on main file README
  */
-// gulp.task('readme', function (cb) {
+// gulp.task('doc:readme', function (cb) {
 //   gulp.src()
 //     .pipe(notify({ message: message.documentation.readme, onLast: false  }))
 
@@ -401,6 +401,10 @@ gulp.task('default', ['pug', 'sass', 'js', 'imageSync', 'fontsSync', 'watch', 'b
  * @description Task on project for production mode
  */
 gulp.task('build', ['fontsBuild', 'htmlBuild', 'jsBuild', 'cssBuild'] );
+/** 
+ * @description Task on project for presentation mode
+ */
+gulp.task('view', ['zip', 'server']);
 /**
  * @description Task on project for run validation for all types of files
  */
@@ -408,4 +412,4 @@ gulp.task('validation', ['validation:html', 'validation:js']);
 /**
  * @description Task on project for start generation of all types of documentation
  */
-gulp.task('documentation', ['jsDoc', 'readme']);
+gulp.task('docs', ['jsDoc', 'readme']);
