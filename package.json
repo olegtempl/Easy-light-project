@@ -73,6 +73,7 @@
     "rollup-plugin-commonjs": "^8.4.1",
     "rollup-plugin-node-resolve": "^3.2.0",
     "rollup-stream": "^1.24.1",
+    "sass-lint": "^1.12.1",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "wdio-jasmine-framework": "^0.3.4",
