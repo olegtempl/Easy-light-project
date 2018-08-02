@@ -1,6 +1,6 @@
 {
   "name": "ELP",
-  "version": "1.3.4",
+  "version": "1.5.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,8 @@
     "test:m": "gulp test:mocha",
     "test:u": "gulp test:unit",
     "test:e": "gulp test:e2e",
-    "js": "rollup -c configs/rollup.config.js -w -m"
+    "js": "rollup -c configs/rollup.config.js -w -m",
+    "commit": "commit-wizard"
   },
   "author": "Oleg Medvedev",
   "license": "CC BY-NC-SA 4.0",
@@ -60,6 +61,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-rimraf": "^0.2.2",
     "gulp-sass": "^3.2.1",
+    "gulp-sass-lint": "^1.4.0",
     "gulp-uglify": "^3.0.0",
     "gulp-uncss": "^1.0.6",
     "gulp-zip": "^4.1.0",
@@ -68,12 +70,13 @@
     "mocha": "^5.0.1",
     "node-cl-log": "^1.0.3",
     "pageres": "^4.5.1",
+    "pre-git": "^3.17.1",
     "psi": "^3.1.0",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-commonjs": "^8.4.1",
     "rollup-plugin-node-resolve": "^3.2.0",
     "rollup-stream": "^1.24.1",
-    "sass-lint": "^1.12.1",
+    "sassdoc": "^2.5.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "wdio-jasmine-framework": "^0.3.4",
@@ -81,5 +84,23 @@
   },
   "dependencies": {
     "dev": "^0.1.3"
+  },
+  "release": {
+    "analyzeCommits": "simple-commit-message"
+  },
+  "config": {
+    "pre-git": {
+      "enabled": false,
+      "allow-untracked-files": true,
+      "msg-pattern-error": "whatever error message that will be thrown when the pattern fails",
+      "msg-pattern": "^(US|DE)\\d+ - .+",
+      "commit-msg": "simple msg",
+      "pre-commit": [],
+      "pre-push": [],
+      "post-commit": [],
+      "post-checkout": [],
+      "post-merge": []
+    }
   }
+
 }

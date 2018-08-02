@@ -2,7 +2,7 @@
    "src": {
       "pug": "src/pug/*.pug",
       "js": "src/js/",
-      "scss": "src/styles/**/*.scss",
+      "scss": "src/styles/**/*.s+(a|c)ss",
       "images": "src/images/",
       "fonts": "src/fonts/"
    },
@@ -23,7 +23,7 @@
    "watch": {
       "pug": "src/pug/**/**/*.pug",
       "js": "src/js/**/*.js",
-      "scss": "src/styles/**/*.scss",
+      "scss": "src/styles/**/*.s+(a|c)ss",
       "images": "src/images/**/*",
       "fonts": "src/fonts/**/*"
    },
@@ -38,13 +38,15 @@
       "html": "build/*.html",
       "css": "build/styles/index.css",
       "js": "src/js/**/*.js",
-      "jsFixedLinterOutput": "src/js/"
+      "jsFixedLinterOutput": "src/js/",
+      "scss": "src/styles/**/*.s+(a|c)ss'"
    },
    "configs": {
       "jsDoc": "./configs/jsDoc.json",
       "babel": "./configs/babel.json",
       "serverLive": "./configs/serverLivereload.json",
-      "serverTunnel": "./configs/serverTunnel.json"
+      "serverTunnel": "./configs/serverTunnel.json",
+      "scssLint": "./.sass-lint.yml"
    },
    "commands": {
     "serverSelenium": "./configs/shell_commands/serverSelenium.js",

@@ -43,7 +43,8 @@ const JasmineclReporter = require('jasmine-console-reporter'),
       reporter = new JasmineclReporter(jasmineReporterConfig);
 // plugins for validations
 const eslint = require('gulp-eslint'),
-	 	  html5Lint = require('gulp-html5-lint');
+ 	  html5Lint = require('gulp-html5-lint'),
+	  sassLint = require('gulp-sass-lint');
 // plugins for documentation
 const jsdoc = require('gulp-jsdoc3');
 // others
@@ -288,6 +289,23 @@ gulp.task('validation:html', () => {
 		.pipe(notify({ message: message.validation.html, onLast: true  }))
 		.pipe(html5Lint());
 });
+//------------------------------Scss
+/**
+ * @description Task for validation static scss files
+ * @return message for results of validation
+ */
+gulp.task('validation:scss', function () {
+  return gulp.src(path.validation.scss)
+    .pipe(sassLint({
+      options: {
+        formatter: 'stylish',
+        'merge-default-rules': false
+      },
+      configFile: path.configs.scssLint
+    }))
+    .pipe(sassLint.format())
+    .pipe(sassLint.failOnError())
+});
 //------------------------------Js
 /**
  * @description Task for validation static js files
@@ -408,12 +426,9 @@ gulp.task('view', ['zip', 'server']);
 /**
  * @description Task on project for run validation for all types of files
  */
-gulp.task('validation', ['validation:html', 'validation:js']);
-/**
- * @description Task on project for all documentation services
- */
-gulp.task('doc', ['doc:jsdoc', 'doc:readme', 'doc:license']);
+gulp.task('validation', ['validation:html', 'validation:scss', 'validation:js']);
 /**
  * @description Task on project for start generation of all types of documentation
  */
-gulp.task('docs', ['jsDoc', 'readme']);
+gulp.task('doc', ['doc:jsdoc', 'doc:readme', 'doc:license']);
+
