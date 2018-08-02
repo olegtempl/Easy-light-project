@@ -1,3 +1,6 @@
+.prettierrc
+
+
 index-debug.js
 index.js.map
 npm-debug.log*

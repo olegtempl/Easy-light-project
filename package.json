@@ -67,6 +67,7 @@
     "gulp-zip": "^4.1.0",
     "imagemin-pngquant": "^5.1.0",
     "jasmine-console-reporter": "^3.0.2",
+    "markdownlint": "^0.11.0",
     "mocha": "^5.0.1",
     "node-cl-log": "^1.0.3",
     "pageres": "^4.5.1",
@@ -102,5 +103,4 @@
       "post-merge": []
     }
   }
-
 }

@@ -43,10 +43,11 @@
    },
    "configs": {
       "jsDoc": "./configs/jsDoc.json",
+      "scssDoc": "./configs/scssDoc.json",
       "babel": "./configs/babel.json",
       "serverLive": "./configs/serverLivereload.json",
       "serverTunnel": "./configs/serverTunnel.json",
-      "scssLint": "./.sass-lint.yml"
+      "scssLint": "./.sass-lint.yml",
    },
    "commands": {
     "serverSelenium": "./configs/shell_commands/serverSelenium.js",

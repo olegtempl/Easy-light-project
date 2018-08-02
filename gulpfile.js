@@ -46,7 +46,8 @@ const eslint = require('gulp-eslint'),
  	  html5Lint = require('gulp-html5-lint'),
 	  sassLint = require('gulp-sass-lint');
 // plugins for documentation
-const jsdoc = require('gulp-jsdoc3');
+const jsdoc = require('gulp-jsdoc3'),
+	  sassdoc = require('sassdoc');
 // others
 const cl = require('node-cl-log');
 //------------------------------All paths on project
@@ -391,6 +392,16 @@ gulp.task('doc:jsdoc', (cb) => {
     .pipe(notify({ message: message.documentation.jsDoc, onLast: false  }))
     .pipe(jsdoc(jsDocConfig, cb));
 });
+
+/**
+ * @description Task for generation documentation through the sassDoc
+ * @return static documentation on docs directory
+ */
+gulp.task('doc:sassdoc', function () {
+  return gulp.src(path.src.scss)
+    .pipe(sassdoc(path.configs.scssDoc));
+});
+
 //------------------------------Readme
 /**
  * @description Task for generation documentation through the readme-bundler
