@@ -1,53 +1,8 @@
 /* 
             header
 */
-@font-face {
-    font-family: 'GentiumBookBasic';
-    url: ("../fonts/GenBasR.ttf");
-    font-weight: normal;
-    font-style: normal;
-}      
+@import 'header';
 
-@font-face {
-    font-family: 'GentiumBookBasic';
-    url: ("../fonts/GenBasB.ttf");
-    font-weight: bold;
-    font-style: normal;
-}      
-
-
-@font-face {
-    font-family: 'GentiumBookBasic';
-    url: ("../fonts/GenBasB.ttf");
-    font-weight: normal;
-    font-style: italic;
-}      
-
-
-
-@font-face {
-    font-family: "YesevaOne";
-    url: ("../fonts/YesevaOne.otf");
-    font-weight: normal;
-    font-style: bold;
-}  
-@font-face {
-    font-family: "YesevaOne";
-    url: ("../fonts/YesevaOne.otf");
-    font-weight: normal;
-    font-style: bold;
-}  
-
-body { 
-    min-width: 1600px;
-    width: 100% ;
-    a {
-        text-decoration: none; 
-    }
-}
-
-@import 'header/reset';
-@import 'header/header';
 /* 
             main
 */
@@ -61,4 +16,8 @@ body {
             footer
 */
 @import 'footer/footer';
-// @import 'header/sprite';
+
+
+
+
+@import 'reset';
